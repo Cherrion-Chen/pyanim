@@ -1,5 +1,5 @@
-# pyanim
-A animation framework based on Python.
+# Pyanim
+An animation framework based on Python.
 
 Welcome to Pyanim! This is an animation framework based on Python, intended to provide Maths researchers, learers and teachers with a easy kit to learn about how the geometry objects vary with the change of certain parameters.
 
@@ -10,3 +10,5 @@ In basic.py, a class named "Anim" is provided. It must have a method "draw", whi
 High performance generation of geo_drive.dll (graphics driver) to determine the graphics point coordinates under the parameters, and explicitly in the anim object by the animation process to determine the graphics parameters of the function.
 
 For complex geometry objects, all can be implemented by inheriting the Anim class.
+
+As a highschool student, this is the first time I have ever shared my project on GitHub. Despite the huge space for improvement, I still hope my work will bring you convenience or inspirations! 
