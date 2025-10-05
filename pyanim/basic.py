@@ -8,6 +8,7 @@
 '''
 
 from ctypes import *
+import numpy as np
 
 #Anim类包含一个初始化函数和一个绘图函数。
 class Anim:
@@ -45,25 +46,25 @@ plt.show()'''
 
 def cir(r, x, y):
     op = dll.circle(r, x, y)
-    xx, yy = op[:256], op[256:512]
+    xx, yy = np.array(op[:256]), np.array(op[256:512])
     dll.free_mem(op)
     return xx,yy # x-cordinates and y-cordinates of the dots on the circle
 
 def ell(a, b):
     op = dll.ellipse(a, b)
-    xx, yy = op[:256], op[256:512]
+    xx, yy = np.array(op[:256]), np.array(op[256:512])
     dll.free_mem(op)
     return xx,yy # x-cordinates and y-cordinates of the dots on the ellipse
 
 def para(c, mn, mx):
     op = dll.parabola(c, mn, mx)
-    xx, yy = op[:256], op[256:512]
+    xx, yy = np.array(op[:256]), np.array(op[256:512])
     dll.free_mem(op)
     return xx,yy # x-cordinates and y-cordinates of the dots on the parabola
 
 def hyper(a, b, mn, mx):
     op = dll.hyperbola(a, b, mn, mx)
-    xx, yy = op[:256], op[256:512]
+    xx, yy = np.array(op[:256]), np.array(op[256:512])
     dll.free_mem(op)
     return xx,yy # x-cordinates and y-cordinates of the dots on the hyperbola
 
@@ -77,8 +78,8 @@ class circle(Anim):
         r = self.fr(n) if callable(self.fr) else self.fr
         x = self.fx(n) if callable(self.fx) else self.fx
         y = self.fy(n) if callable(self.fy) else self.fy
-        ll = cir(r, x, y)
-        return self.ax.plot(ll[0], ll[1])
+        xx, yy = cir(r, x, y)
+        return self.ax.plot(xx, yy)
     
 class ellipse(Anim):
     def __init__(self, fa, fb):
@@ -88,8 +89,8 @@ class ellipse(Anim):
     def draw(self, n):
         a = self.fa(n) if callable(self.fa) else self.fa
         b = self.fb(n) if callable(self.fb) else self.fb
-        ll = ell(a, b)
-        return self.ax.plot(ll[0], ll[1])
+        xx, yy = ell(a, b)
+        return self.ax.plot(xx, yy)
     
 class parabola(Anim):
     def __init__(self, fc, mn, mx, axis='y'):
@@ -110,15 +111,13 @@ class hyperbola(Anim):
         self.thre = mn, mx
         self.axis = axis=='y'
         self.branch = branch=='neg'
-    def neg(self, x):
-        return -x
     def draw(self, n):
         a = self.fa(n) if callable(self.fa) else self.fa
         b = self.fb(n) if callable(self.fb) else self.fb
-        xx, yy = hyper(a, b, self.thre[0], self.thre[1])
+        ll = hyper(a, b, self.thre[0], self.thre[1])
         if self.branch:
-            yy = list(map(self.neg, yy))
-        return self.ax.plot(xx, yy) if self.axis else self.ax.plot(yy, xx)
+            yy = -yy
+        return self.ax.plot(ll[0], ll[1]) if self.axis else self.ax.plot(ll[1], ll[0])
 
 class line(Anim):
     def __init__(self, dot1, dot2):
